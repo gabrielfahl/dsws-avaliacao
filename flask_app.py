@@ -7,6 +7,7 @@ from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from datetime import datetime
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -43,11 +44,9 @@ class User(db.Model):
 
 
 class NameForm(FlaskForm):
-    name = StringField('What is your name?', validators=[DataRequired()])
-    role = SelectField('Role?', choices=[('Administrator'),
-                                         ('Moderator'),
-                                         ('User')])
-    submit = SubmitField('Submit')
+    name = StringField('Cadastre o novo Aluno:', validators=[DataRequired()])
+    role = SelectField('Disciplina associada:', choices=[('DSWA5'),('GPSA5'),('IGCA5'),('SODA5'),('PJIA5'),('TCOA5')])
+    submit = SubmitField('Cadastrar')
 
 @app.shell_context_processor
 def make_shell_context():
@@ -64,7 +63,7 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/alunos', methods=['GET', 'POST'])
 def index():
     form = NameForm()
     users = User.query.all()
@@ -82,12 +81,20 @@ def index():
         session['name'] = form.name.data
         session['role'] = form.role.data
         return redirect(url_for('index'))
-    return render_template('index.html',
+    return render_template('alunos.html',
                            form=form,
                            name=session.get('name'),
                            known=session.get('known', False),
                            users=users,
                            roles=roles)
+
+@app.route('/')
+def inicio():
+     return render_template('index.html', current_time=datetime.utcnow())
+
+@app.route('/naodisponivel')
+def naodisponivel():
+    return render_template('naodisponivel.html', current_time=datetime.utcnow())
 
 if __name__ == '__main__':
     app.run(debug=True)
