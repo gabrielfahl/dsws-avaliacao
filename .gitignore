@@ -1,0 +1,16 @@
+# Ignorar o ambiente virtual
+venv/
+
+# Ignorar arquivos de cache Python
+__pycache__/
+
+# Ignorar bancos de dados
+data.sqlite
+
+# Ignorar arquivos de configuração específicos do IDE
+.idea/
+.vscode/
+
+# Ignorar outros arquivos específicos
+*.log
+*.env
